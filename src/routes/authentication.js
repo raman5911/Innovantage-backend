@@ -31,8 +31,8 @@ router.use(
         saveUninitialized: false,
         cookie: {
             httpOnly: true,
-            // secure: process.env.SECURE,
-            // sameSite: process.env.SAME_SITE,
+            secure: cookieConfig,
+            sameSite: cookieConfig,
             maxAge: 60 * 60 * 1000 // Time is in miliseconds
         },
         store: store,
