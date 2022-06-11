@@ -3,6 +3,7 @@ const app = express();
 const cors = require('cors');
 const helmet = require('helmet');
 const { json, urlencoded } = require("body-parser");
+const cookieParser = require("cookie-parser");
 
 const routes = require("./src/routes/index");
 const dbConnection = require("./src/config/dbConnection");
@@ -14,7 +15,9 @@ require('dotenv').config();
 app.use(helmet());
 
 // enabling CORS for all requests
-app.use(cors());
+// app.use(cors());
+app.use(cors({ origin:[`${process.env.WEBSITE_URL}`, `${process.env.ADMIN_PORTAL_URL}`, `${process.env.CLIENT_PORTAL_URL}`], credentials: true }));
+app.use(cookieParser());
 
 app.set('x-powered-by', false);
 app.use(json({ limit: '50mb', extended: true }));

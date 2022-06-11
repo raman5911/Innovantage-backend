@@ -1,15 +1,16 @@
-const res = require("express/lib/response");
 const careerJobSchema = require("../models/careerJobSchema");
 
-function fetchAllJobs(res) {
+function fetchAllJobs(req, res) {
     careerJobSchema.find().then((response) => {
         res.status(200).json({ data: response });
     }).catch((err) => {
-        res.status(500).json({ message: "Some error occurred while fetching details!" });
+        res.status(500).json({ message: `Error : ${err}` });
     })
 }
 
-function createNewJob(data, res) {
+function createNewJob(data, req, res) {
+
+    // console.log(req.cookies, req.signedCookies);
 
     const newJob = new careerJobSchema({
         position: data.position,
@@ -23,14 +24,59 @@ function createNewJob(data, res) {
 
     newJob.save((err, data) => {
         if(err) {
-            res.status(500).json({ message: "There was some error! Please try again later." })
+            res.status(500).json({ message: `Error : ${err}` })
         }
         else {
-            res.status(200).json({ data: data, message: "Job Created Successfully!" });
+            res.status(201).json({ data: data, message: "Job Created Successfully!" });
         }
     })
 
     console.log('new job created!');
 }
 
-module.exports = { fetchAllJobs, createNewJob };
+function editJob(data, res) {
+    const id = data.id;
+    const newData = data.value;
+
+    careerJobSchema.findOne({
+        _id: id
+    },
+    (err, jobData) => {
+        if (err) {
+            throw new Error(err);
+        }
+        else if (jobData) {
+            jobData.position = newData.position;
+            jobData.location = newData.location;
+            jobData.experience_min = newData.experience_min;
+            jobData.experience_max = newData.experience_max;
+            jobData.post_link = newData.post_link;
+            jobData.created_on =  newData.created_on;
+            jobData.application_deadline = newData.deadline;
+        
+            jobData.save((err, result) => {
+                if(err) {
+                    res.status(500).json({ message: `Error : ${err}` });
+                }
+                else if (result) {
+                    res.status(200).json({ data: result, message: "Job Data Updated Successfully!" })
+                }
+            })
+        }
+    });
+}
+
+function deleteJob(data, res) {
+    const id = data.id;
+    // console.log(id);
+    careerJobSchema.findByIdAndDelete(id, (err) => {
+        if(err) {
+            res.status(500).json({ message: `Error : ${err}` });
+        }
+        else {
+            res.status(200).json({message: "Job Post Deleted Successfully!"});
+        }
+    })
+}
+
+module.exports = { fetchAllJobs, createNewJob, editJob, deleteJob };
