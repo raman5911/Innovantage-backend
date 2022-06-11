@@ -15,6 +15,15 @@ const store = new MongoDBStore({
     autoRemove: 'native'
 });
 
+var cookieConfig;
+
+if(process.env.SERVER === "local") {
+    cookieConfig = false;
+}
+else if(process.env.SERVER === "production") {
+    cookieConfig = true;
+}
+
 router.use(
     session({
         secret: [process.env.SESSION_SECRET, "admin-session"],
@@ -22,8 +31,8 @@ router.use(
         saveUninitialized: false,
         cookie: {
             httpOnly: true,
-            // secure: true,
-            sameSite: false,
+            // secure: process.env.SECURE,
+            // sameSite: process.env.SAME_SITE,
             maxAge: 60 * 60 * 1000 // Time is in miliseconds
         },
         store: store,
