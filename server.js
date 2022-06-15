@@ -16,9 +16,19 @@ app.use(helmet());
 
 // enabling CORS for all requests
 // app.use(cors());
-app.use(cors({ origin:[`${process.env.WEBSITE_URL}`, `${process.env.ADMIN_PORTAL_URL}`, `${process.env.CLIENT_PORTAL_URL}`], credentials: true }));
+app.use(
+  cors({
+    origin: [
+      `${process.env.WEBSITE_URL}`,
+      `${process.env.ADMIN_PORTAL_URL}`,
+      `${process.env.CLIENT_PORTAL_URL}`,
+    ],
+    credentials: true
+  })
+);
 app.use(cookieParser());
 
+app.set("trust proxy", 1);
 app.set('x-powered-by', false);
 app.use(json({ limit: '50mb', extended: true }));
 app.use(urlencoded({ limit: '50mb', extended: true }));
