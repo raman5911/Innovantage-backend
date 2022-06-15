@@ -32,7 +32,7 @@ router.use(
         cookie: {
             httpOnly: true,
             secure: cookieConfig,
-            sameSite: cookieConfig,
+            sameSite: cookieConfig === true ? "none" : false,
             maxAge: 60 * 60 * 1000 // Time is in miliseconds
         },
         store: store,
