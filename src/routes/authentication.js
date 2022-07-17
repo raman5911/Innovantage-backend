@@ -33,7 +33,7 @@ router.use(
             httpOnly: true,
             secure: cookieConfig,
             sameSite: cookieConfig === true ? "none" : false,
-            maxAge: 60 * 60 * 1000 // Time is in miliseconds
+            maxAge: 60 * 60 * 1000 * 6 // Time is in miliseconds
         },
         store: store,
     })
